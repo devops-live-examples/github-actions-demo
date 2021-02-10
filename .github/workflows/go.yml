@@ -1,0 +1,27 @@
+name: Go
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos:
+          - linux
+          - darwin
+          - windows
+        goarch:
+          - amd64
+          - arm64
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - run: go build -o server-${{ matrix.goos }}-${{ matrix.goarch }}
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: server-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: server-${{ matrix.goos }}-${{ matrix.goarch }}
